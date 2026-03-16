@@ -8,19 +8,15 @@
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  color: #fff;
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color: white;
 }
-
-/* Header */
 header {
   padding: 40px 20px;
   text-align: center;
 }
-header h1 { font-size: 3em; color: #4fc3f7; margin:0; }
-header p { font-size: 1.2em; opacity:0.9; }
-
-/* Menu */
+header h1 { font-size: 3em; margin:0; color:#4fc3f7; }
+header p { font-size:1.2em; opacity:0.9; }
 nav {
   display: flex;
   justify-content: center;
@@ -28,14 +24,8 @@ nav {
   background: rgba(0,0,0,0.4);
   padding: 15px;
 }
-nav a {
-  color:#fff;
-  text-decoration:none;
-  font-weight:bold;
-}
+nav a { color:#fff; text-decoration:none; font-weight:bold; }
 nav a:hover { color:#4fc3f7; }
-
-/* Seção principal */
 section {
   max-width: 600px;
   margin: 40px auto;
@@ -44,50 +34,51 @@ section {
   border-radius: 14px;
   box-shadow: 0 0 25px rgba(0,0,0,0.5);
 }
-section h2 { text-align:center; color:#4fc3f7; }
-
-/* Form info */
-.form-info {
-  background: rgba(255,255,255,0.08);
-  padding: 20px;
-  border-radius: 10px;
-  margin-top: 20px;
-}
-.form-info p { margin:10px 0; }
+section h2 { text-align:center; color:#4fc3f7; margin-bottom:20px; }
 label { display:block; margin-top:15px; font-weight:bold; }
-input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border-radius: 8px;
-  border: none;
-}
-
-/* Botões */
+input { width:100%; padding:10px; margin-top:5px; border-radius:8px; border:none; }
 button {
-  width: 100%;
-  margin-top: 15px;
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
+  width:100%;
+  margin-top:20px;
+  padding:12px;
+  border-radius:8px;
+  border:none;
+  font-weight:bold;
+  cursor:pointer;
+  background:#4fc3f7;
+  color:black;
+  transition:0.3s;
 }
-.confirm-btn { background:#4fc3f7; color:black; }
-.confirm-btn:hover { background:#81d4fa; }
-.back-btn { background:#444; color:white; margin-top:10px; }
-.back-btn:hover { background:#555; }
+button:hover { background:#81d4fa; }
+p.info { text-align:center; margin-top:15px; font-size:12px; opacity:0.8; }
 
-/* Footer */
-footer { text-align:center; padding:20px; opacity:0.7; margin-top:20px; }
+/* Gaveta de seleção de pagamento */
+.gaveta {
+  display:none; /* só aparece após captcha correto */
+  margin-top:20px;
+  background: rgba(255,255,255,0.08);
+  border-radius:10px;
+  padding:10px;
+}
+.gaveta .opcao {
+  background: rgba(255,255,255,0.08);
+  padding:15px;
+  margin-bottom:10px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+  text-align:center;
+  transition:0.3s;
+}
+.gaveta .opcao:hover { background:#4fc3f7; color:black; }
+.gaveta .opcao.selected { background:#4fc3f7; color:black; }
 </style>
 </head>
 <body>
 
 <header>
   <h1>GortSMP</h1>
-  <p>Confirme seus dados para completar a compra</p>
+  <p>Confirme seus dados e resolva o captcha para liberar pagamento</p>
 </header>
 
 <nav>
@@ -97,20 +88,25 @@ footer { text-align:center; padding:20px; opacity:0.7; margin-top:20px; }
   <a href="#como-entrar">Como Entrar</a>
 </nav>
 
-<section id="confirmacao">
+<section>
   <h2>Confirmar Dados</h2>
 
   <div class="form-info">
     <p><strong>Nick:</strong> <span id="nick"></span></p>
     <p><strong>Email:</strong> <span id="email"></span></p>
     <p><strong>Número:</strong> <span id="numero"></span></p>
-    <p><strong>Pagamento:</strong> <span id="pagamento"></span></p>
 
+    <!-- Captcha -->
     <label id="captcha-label">Captcha:</label>
     <input type="text" id="captcha" placeholder="Digite a resposta">
+    <button type="button" onclick="verificarCaptcha()">Verificar Captcha</button>
 
-    <button class="confirm-btn" onclick="verificar()">Confirmar Compra</button>
-    <button class="back-btn" onclick="history.back()">Voltar</button>
+    <!-- Gaveta de seleção de pagamento -->
+    <div class="gaveta" id="gavetaPagamento">
+      <div class="opcao" onclick="selecionarPagamento('PIX')">PIX</div>
+      <div class="opcao" onclick="selecionarPagamento('Dinheiro do Jogo')">Dinheiro do Jogo</div>
+      <button onclick="enviarDados()">Confirmar Compra</button>
+    </div>
   </div>
 </section>
 
@@ -124,9 +120,8 @@ const params = new URLSearchParams(window.location.search);
 document.getElementById("nick").textContent = params.get("nick");
 document.getElementById("email").textContent = params.get("email");
 document.getElementById("numero").textContent = params.get("numero");
-document.getElementById("pagamento").textContent = params.get("pagamento");
 
-// Captcha aleatório
+// Gera captcha aleatório
 let captchaResult = 0;
 function gerarCaptcha(){
   const a = Math.floor(Math.random()*50)+1;
@@ -138,14 +133,40 @@ function gerarCaptcha(){
 gerarCaptcha();
 
 // Verifica captcha
-function verificar(){
+function verificarCaptcha(){
   const resposta = parseInt(document.getElementById("captcha").value);
   if(resposta === captchaResult){
-    alert("Compra enviada para a equipe do servidor!");
+    alert("Captcha correto! Agora escolha a forma de pagamento.");
+    document.getElementById("gavetaPagamento").style.display = "block";
   } else {
     alert("Captcha incorreto! Um novo captcha foi gerado.");
-    gerarCaptcha(); // troca captcha automaticamente
+    gerarCaptcha();
+    document.getElementById("gavetaPagamento").style.display = "none";
   }
+}
+
+// Seleção de pagamento
+let pagamentoSelecionado = "";
+function selecionarPagamento(opcao){
+  pagamentoSelecionado = opcao;
+  document.querySelectorAll(".gaveta .opcao").forEach(el=>{
+    el.classList.remove("selected");
+  });
+  event.target.classList.add("selected");
+}
+
+// Envia dados
+function enviarDados(){
+  if(!pagamentoSelecionado){
+    alert("Selecione uma forma de pagamento!");
+    return;
+  }
+  const nick = params.get("nick");
+  const email = params.get("email");
+  const numero = params.get("numero");
+
+  // Redireciona para confirmar.html (ou processa aqui mesmo)
+  alert(`Compra confirmada!\nNick: ${nick}\nEmail: ${email}\nNúmero: ${numero}\nPagamento: ${pagamentoSelecionado}`);
 }
 </script>
 
