@@ -2,71 +2,93 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Comprar VIP - GortSMP</title>
-
 <style>
-body{
-  font-family: Arial;
-  background:#0f2027;
-  color:white;
+body {
+  margin:0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
   display:flex;
   justify-content:center;
   align-items:center;
   height:100vh;
+  color:white;
 }
 
-.box{
-  background:rgba(0,0,0,0.6);
-  padding:30px;
-  border-radius:12px;
-  width:300px;
+.box {
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(8px);
+  padding: 40px;
+  border-radius: 14px;
+  width: 350px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.5);
 }
 
-input{
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  border:none;
-  border-radius:6px;
+h2 {
+  text-align:center;
+  color:#4fc3f7;
+  margin-top:0;
 }
 
-button{
-  width:100%;
+label {
+  display:block;
   margin-top:15px;
+  font-size:14px;
+}
+
+input {
+  width:100%;
   padding:10px;
-  background:#4fc3f7;
+  margin-top:5px;
   border:none;
   border-radius:6px;
+}
+
+button {
+  width:100%;
+  margin-top:20px;
+  padding:12px;
+  border:none;
+  border-radius:8px;
   font-weight:bold;
+  cursor:pointer;
+  background:#4fc3f7;
+  color:black;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background:#81d4fa;
+}
+
+p.info {
+  text-align:center;
+  margin-top:15px;
+  font-size:12px;
+  opacity:0.8;
 }
 </style>
-
 </head>
-
 <body>
 
 <div class="box">
-
 <h2>Comprar VIP</h2>
 
-<form>
-
+<form action="confirmar.html" method="GET">
 <label>Nick do Minecraft</label>
-<input type="text" placeholder="Seu nick" required>
+<input type="text" name="nick" placeholder="Seu nick" required>
 
 <label>Email</label>
-<input type="email" placeholder="Seu email" required>
+<input type="email" name="email" placeholder="Seu email" required>
 
 <label>Número</label>
-<input type="text" placeholder="Seu número">
+<input type="text" name="numero" placeholder="Seu número">
 
-<label>Pacote</label>
-<input type="text" placeholder="VIP / VIP+ / MVP">
-
-<button type="submit">Enviar</button>
-
+<button type="submit">Continuar</button>
 </form>
 
+<p class="info">Os dados serão confirmados na próxima página.</p>
 </div>
 
 </body>
