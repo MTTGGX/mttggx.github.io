@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GortSMP - Confirmar Compra</title>
 <style>
+/* === Body e Background === */
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   color: #fff;
 }
+
+/* === Header === */
 header {
   padding: 40px 20px;
   text-align: center;
@@ -24,6 +27,8 @@ header p {
   font-size: 1.2em;
   opacity: 0.9;
 }
+
+/* === Menu === */
 nav {
   display: flex;
   justify-content: center;
@@ -39,22 +44,30 @@ nav a {
 nav a:hover {
   color: #4fc3f7;
 }
+
+/* === Seção principal === */
 section {
-  max-width: 1000px;
+  max-width: 600px;
   margin: 40px auto;
-  padding: 20px;
+  padding: 30px;
   background: rgba(0,0,0,0.5);
-  border-radius: 12px;
+  border-radius: 14px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.5);
 }
 section h2 {
-  color: #4fc3f7;
   text-align: center;
+  color: #4fc3f7;
 }
+
+/* === Form Info Box === */
 .form-info {
   background: rgba(255,255,255,0.08);
-  padding: 15px;
+  padding: 20px;
   border-radius: 10px;
-  margin-top: 15px;
+  margin-top: 20px;
+}
+.form-info p {
+  margin: 10px 0;
 }
 label {
   display: block;
@@ -68,14 +81,17 @@ input {
   border-radius: 8px;
   border: none;
 }
+
+/* === Botões === */
 button {
-  display: inline-block;
+  width: 100%;
   margin-top: 15px;
-  padding: 12px 20px;
+  padding: 12px;
   border-radius: 8px;
   border: none;
   font-weight: bold;
   cursor: pointer;
+  transition: 0.3s;
 }
 .confirm-btn {
   background: #4fc3f7;
@@ -87,12 +103,18 @@ button {
 .back-btn {
   background: #444;
   color: white;
-  margin-left: 10px;
+  margin-top: 10px;
 }
+.back-btn:hover {
+  background: #555;
+}
+
+/* === Footer === */
 footer {
   text-align: center;
   padding: 20px;
   opacity: 0.7;
+  margin-top: 20px;
 }
 </style>
 </head>
@@ -118,7 +140,7 @@ footer {
     <p><strong>Email:</strong> <span id="email"></span></p>
     <p><strong>Número:</strong> <span id="numero"></span></p>
 
-    <label>Captcha: Quanto é 7 + 5?</label>
+    <label id="captcha-label">Captcha:</label>
     <input type="text" id="captcha" placeholder="Digite a resposta">
 
     <button class="confirm-btn" onclick="verificar()">Confirmar Compra</button>
@@ -131,17 +153,31 @@ footer {
 </footer>
 
 <script>
+// Recebe dados do formulário anterior
 const params = new URLSearchParams(window.location.search);
 document.getElementById("nick").textContent = params.get("nick");
 document.getElementById("email").textContent = params.get("email");
 document.getElementById("numero").textContent = params.get("numero");
 
+// Função para gerar captcha aleatório
+let captchaResult = 0;
+function gerarCaptcha(){
+  const a = Math.floor(Math.random() * 50) + 1; // 1 a 50
+  const b = Math.floor(Math.random() * 50) + 1;
+  captchaResult = a + b;
+  document.getElementById("captcha-label").textContent = `Captcha: Quanto é ${a} + ${b}?`;
+  document.getElementById("captcha").value = "";
+}
+gerarCaptcha(); // gera captcha ao abrir
+
+// Função de verificação
 function verificar(){
-  let captcha = document.getElementById("captcha").value;
-  if(captcha == "12"){
+  const resposta = parseInt(document.getElementById("captcha").value);
+  if(resposta === captchaResult){
     alert("Compra enviada para a equipe do servidor!");
   } else {
-    alert("Captcha incorreto!");
+    alert("Captcha incorreto! Um novo captcha foi gerado.");
+    gerarCaptcha(); // troca captcha se errado
   }
 }
 </script>
