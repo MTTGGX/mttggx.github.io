@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Confirmar Dados</title>
+
+<style>
+body{
+font-family:Arial;
+background:#0f2027;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.box{
+background:rgba(0,0,0,0.6);
+padding:30px;
+border-radius:10px;
+width:300px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>Confirme seus dados</h2>
+
+<p><strong>Nick:</strong> <span id="nick"></span></p>
+<p><strong>Email:</strong> <span id="email"></span></p>
+<p><strong>Número:</strong> <span id="numero"></span></p>
+
+<p>Os dados estão corretos?</p>
+
+<label>Captcha: Quanto é 5 + 3?</label>
+<input type="text" id="captcha">
+
+<button onclick="verificar()">Confirmar</button>
+
+</div>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+document.getElementById("nick").textContent = params.get("nick");
+document.getElementById("email").textContent = params.get("email");
+document.getElementById("numero").textContent = params.get("numero");
+
+function verificar(){
+
+let captcha = document.getElementById("captcha").value;
+
+if(captcha == "8"){
+alert("Dados Enviado");
+}else{
+alert("Captcha errado!");
+}
+
+}
+
+</script>
+
+</body>
+</html>
