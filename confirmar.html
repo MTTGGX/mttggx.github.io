@@ -1,69 +1,149 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Confirmar Dados</title>
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GortSMP - Confirmar Compra</title>
 <style>
-body{
-font-family:Arial;
-background:#0f2027;
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #fff;
 }
-
-.box{
-background:rgba(0,0,0,0.6);
-padding:30px;
-border-radius:10px;
-width:300px;
+header {
+  padding: 40px 20px;
+  text-align: center;
+}
+header h1 {
+  font-size: 3em;
+  margin: 0;
+  color: #4fc3f7;
+}
+header p {
+  font-size: 1.2em;
+  opacity: 0.9;
+}
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  background: rgba(0,0,0,0.4);
+  padding: 15px;
+}
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+nav a:hover {
+  color: #4fc3f7;
+}
+section {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 12px;
+}
+section h2 {
+  color: #4fc3f7;
+  text-align: center;
+}
+.form-info {
+  background: rgba(255,255,255,0.08);
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 15px;
+}
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+}
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: none;
+}
+button {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+.confirm-btn {
+  background: #4fc3f7;
+  color: black;
+}
+.confirm-btn:hover {
+  background: #81d4fa;
+}
+.back-btn {
+  background: #444;
+  color: white;
+  margin-left: 10px;
+}
+footer {
+  text-align: center;
+  padding: 20px;
+  opacity: 0.7;
 }
 </style>
-
 </head>
-
 <body>
 
-<div class="box">
+<header>
+  <h1>GortSMP</h1>
+  <p>Confirme seus dados para completar a compra</p>
+</header>
 
-<h2>Confirme seus dados</h2>
+<nav>
+  <a href="index.html">Home</a>
+  <a href="#sobre">Sobre</a>
+  <a href="#loja">Loja</a>
+  <a href="#como-entrar">Como Entrar</a>
+</nav>
 
-<p><strong>Nick:</strong> <span id="nick"></span></p>
-<p><strong>Email:</strong> <span id="email"></span></p>
-<p><strong>Número:</strong> <span id="numero"></span></p>
+<section id="confirmacao">
+  <h2>Confirmar Dados</h2>
 
-<p>Os dados estão corretos?</p>
+  <div class="form-info">
+    <p><strong>Nick:</strong> <span id="nick"></span></p>
+    <p><strong>Email:</strong> <span id="email"></span></p>
+    <p><strong>Número:</strong> <span id="numero"></span></p>
 
-<label>Captcha: Quanto é 5 + 3?</label>
-<input type="text" id="captcha">
+    <label>Captcha: Quanto é 7 + 5?</label>
+    <input type="text" id="captcha" placeholder="Digite a resposta">
 
-<button onclick="verificar()">Confirmar</button>
+    <button class="confirm-btn" onclick="verificar()">Confirmar Compra</button>
+    <button class="back-btn" onclick="history.back()">Voltar</button>
+  </div>
+</section>
 
-</div>
+<footer>
+  <p>© 2026 GortSMP • Todos os direitos reservados</p>
+</footer>
 
 <script>
-
 const params = new URLSearchParams(window.location.search);
-
 document.getElementById("nick").textContent = params.get("nick");
 document.getElementById("email").textContent = params.get("email");
 document.getElementById("numero").textContent = params.get("numero");
 
 function verificar(){
-
-let captcha = document.getElementById("captcha").value;
-
-if(captcha == "8"){
-alert("Dados Enviado");
-}else{
-alert("Captcha errado!");
+  let captcha = document.getElementById("captcha").value;
+  if(captcha == "12"){
+    alert("Compra enviada para a equipe do servidor!");
+  } else {
+    alert("Captcha incorreto!");
+  }
 }
-
-}
-
 </script>
 
 </body>
