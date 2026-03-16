@@ -54,7 +54,7 @@ p.info { text-align:center; margin-top:15px; font-size:12px; opacity:0.8; }
 
 /* Gaveta de seleção de pagamento */
 .gaveta {
-  display:none; /* só aparece após captcha correto */
+  display:none;
   margin-top:20px;
   background: rgba(255,255,255,0.08);
   border-radius:10px;
@@ -72,6 +72,17 @@ p.info { text-align:center; margin-top:15px; font-size:12px; opacity:0.8; }
 }
 .gaveta .opcao:hover { background:#4fc3f7; color:black; }
 .gaveta .opcao.selected { background:#4fc3f7; color:black; }
+
+/* Área do resultado */
+#resultadoPagamento {
+  margin-top: 20px;
+  text-align: center;
+}
+#resultadoPagamento img {
+  max-width: 200px;
+  margin-top: 15px;
+  border-radius: 10px;
+}
 </style>
 </head>
 <body>
@@ -105,8 +116,10 @@ p.info { text-align:center; margin-top:15px; font-size:12px; opacity:0.8; }
     <div class="gaveta" id="gavetaPagamento">
       <div class="opcao" onclick="selecionarPagamento('PIX')">PIX</div>
       <div class="opcao" onclick="selecionarPagamento('Dinheiro do Jogo')">Dinheiro do Jogo</div>
-      <button onclick="enviarDados()">Confirmar Compra</button>
     </div>
+
+    <!-- Resultado da escolha -->
+    <div id="resultadoPagamento"></div>
   </div>
 </section>
 
@@ -129,6 +142,8 @@ function gerarCaptcha(){
   captchaResult = a + b;
   document.getElementById("captcha-label").textContent = `Captcha: Quanto é ${a} + ${b}?`;
   document.getElementById("captcha").value = "";
+  document.getElementById("gavetaPagamento").style.display = "none";
+  document.getElementById("resultadoPagamento").innerHTML = "";
 }
 gerarCaptcha();
 
@@ -141,7 +156,6 @@ function verificarCaptcha(){
   } else {
     alert("Captcha incorreto! Um novo captcha foi gerado.");
     gerarCaptcha();
-    document.getElementById("gavetaPagamento").style.display = "none";
   }
 }
 
@@ -153,20 +167,14 @@ function selecionarPagamento(opcao){
     el.classList.remove("selected");
   });
   event.target.classList.add("selected");
-}
 
-// Envia dados
-function enviarDados(){
-  if(!pagamentoSelecionado){
-    alert("Selecione uma forma de pagamento!");
-    return;
+  const resultado = document.getElementById("resultadoPagamento");
+  if(opcao === "PIX"){
+    // Aqui coloca o QR Code do seu PIX
+    resultado.innerHTML = '<p>Escaneie o QR Code abaixo:</p><img src="https://via.placeholder.com/200x200.png?text=Seu+QR+Code" alt="PIX QR Code">';
+  } else if(opcao === "Dinheiro do Jogo"){
+    resultado.innerHTML = '<p>Fala com o ADM/Mod online</p>';
   }
-  const nick = params.get("nick");
-  const email = params.get("email");
-  const numero = params.get("numero");
-
-  // Redireciona para confirmar.html (ou processa aqui mesmo)
-  alert(`Compra confirmada!\nNick: ${nick}\nEmail: ${email}\nNúmero: ${numero}\nPagamento: ${pagamentoSelecionado}`);
 }
 </script>
 
