@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GortSMP - Confirmar Compra</title>
 <style>
-/* === Body e Background === */
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
@@ -13,22 +12,15 @@ body {
   color: #fff;
 }
 
-/* === Header === */
+/* Header */
 header {
   padding: 40px 20px;
   text-align: center;
 }
-header h1 {
-  font-size: 3em;
-  margin: 0;
-  color: #4fc3f7;
-}
-header p {
-  font-size: 1.2em;
-  opacity: 0.9;
-}
+header h1 { font-size: 3em; color: #4fc3f7; margin:0; }
+header p { font-size: 1.2em; opacity:0.9; }
 
-/* === Menu === */
+/* Menu */
 nav {
   display: flex;
   justify-content: center;
@@ -37,15 +29,13 @@ nav {
   padding: 15px;
 }
 nav a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
+  color:#fff;
+  text-decoration:none;
+  font-weight:bold;
 }
-nav a:hover {
-  color: #4fc3f7;
-}
+nav a:hover { color:#4fc3f7; }
 
-/* === Seção principal === */
+/* Seção principal */
 section {
   max-width: 600px;
   margin: 40px auto;
@@ -54,26 +44,17 @@ section {
   border-radius: 14px;
   box-shadow: 0 0 25px rgba(0,0,0,0.5);
 }
-section h2 {
-  text-align: center;
-  color: #4fc3f7;
-}
+section h2 { text-align:center; color:#4fc3f7; }
 
-/* === Form Info Box === */
+/* Form info */
 .form-info {
   background: rgba(255,255,255,0.08);
   padding: 20px;
   border-radius: 10px;
   margin-top: 20px;
 }
-.form-info p {
-  margin: 10px 0;
-}
-label {
-  display: block;
-  margin-top: 15px;
-  font-weight: bold;
-}
+.form-info p { margin:10px 0; }
+label { display:block; margin-top:15px; font-weight:bold; }
 input {
   width: 100%;
   padding: 10px;
@@ -82,7 +63,7 @@ input {
   border: none;
 }
 
-/* === Botões === */
+/* Botões */
 button {
   width: 100%;
   margin-top: 15px;
@@ -93,29 +74,13 @@ button {
   cursor: pointer;
   transition: 0.3s;
 }
-.confirm-btn {
-  background: #4fc3f7;
-  color: black;
-}
-.confirm-btn:hover {
-  background: #81d4fa;
-}
-.back-btn {
-  background: #444;
-  color: white;
-  margin-top: 10px;
-}
-.back-btn:hover {
-  background: #555;
-}
+.confirm-btn { background:#4fc3f7; color:black; }
+.confirm-btn:hover { background:#81d4fa; }
+.back-btn { background:#444; color:white; margin-top:10px; }
+.back-btn:hover { background:#555; }
 
-/* === Footer === */
-footer {
-  text-align: center;
-  padding: 20px;
-  opacity: 0.7;
-  margin-top: 20px;
-}
+/* Footer */
+footer { text-align:center; padding:20px; opacity:0.7; margin-top:20px; }
 </style>
 </head>
 <body>
@@ -139,6 +104,7 @@ footer {
     <p><strong>Nick:</strong> <span id="nick"></span></p>
     <p><strong>Email:</strong> <span id="email"></span></p>
     <p><strong>Número:</strong> <span id="numero"></span></p>
+    <p><strong>Pagamento:</strong> <span id="pagamento"></span></p>
 
     <label id="captcha-label">Captcha:</label>
     <input type="text" id="captcha" placeholder="Digite a resposta">
@@ -158,26 +124,27 @@ const params = new URLSearchParams(window.location.search);
 document.getElementById("nick").textContent = params.get("nick");
 document.getElementById("email").textContent = params.get("email");
 document.getElementById("numero").textContent = params.get("numero");
+document.getElementById("pagamento").textContent = params.get("pagamento");
 
-// Função para gerar captcha aleatório
+// Captcha aleatório
 let captchaResult = 0;
 function gerarCaptcha(){
-  const a = Math.floor(Math.random() * 50) + 1; // 1 a 50
-  const b = Math.floor(Math.random() * 50) + 1;
+  const a = Math.floor(Math.random()*50)+1;
+  const b = Math.floor(Math.random()*50)+1;
   captchaResult = a + b;
   document.getElementById("captcha-label").textContent = `Captcha: Quanto é ${a} + ${b}?`;
   document.getElementById("captcha").value = "";
 }
-gerarCaptcha(); // gera captcha ao abrir
+gerarCaptcha();
 
-// Função de verificação
+// Verifica captcha
 function verificar(){
   const resposta = parseInt(document.getElementById("captcha").value);
   if(resposta === captchaResult){
     alert("Compra enviada para a equipe do servidor!");
   } else {
     alert("Captcha incorreto! Um novo captcha foi gerado.");
-    gerarCaptcha(); // troca captcha se errado
+    gerarCaptcha(); // troca captcha automaticamente
   }
 }
 </script>
