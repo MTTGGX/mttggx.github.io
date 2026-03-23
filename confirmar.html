@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GortSMP - Confirmar Compra</title>
+
 <style>
 body {
   margin: 0;
@@ -11,12 +12,34 @@ body {
   background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
   color: white;
 }
+
+/* BOTÃO BAIXAR */
+.btn-baixar {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #4fc3f7;
+  color: black;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  transition: 0.3s;
+  z-index: 999;
+}
+.btn-baixar:hover {
+  background: #81d4fa;
+  transform: scale(1.05);
+}
+
 header {
   padding: 40px 20px;
   text-align: center;
 }
 header h1 { font-size: 3em; margin:0; color:#4fc3f7; }
 header p { font-size:1.2em; opacity:0.9; }
+
 nav {
   display: flex;
   justify-content: center;
@@ -26,6 +49,7 @@ nav {
 }
 nav a { color:#fff; text-decoration:none; font-weight:bold; }
 nav a:hover { color:#4fc3f7; }
+
 section {
   max-width: 600px;
   margin: 40px auto;
@@ -34,9 +58,23 @@ section {
   border-radius: 14px;
   box-shadow: 0 0 25px rgba(0,0,0,0.5);
 }
-section h2 { text-align:center; color:#4fc3f7; margin-bottom:20px; }
+
+section h2 {
+  text-align:center;
+  color:#4fc3f7;
+  margin-bottom:20px;
+}
+
 label { display:block; margin-top:15px; font-weight:bold; }
-input { width:100%; padding:10px; margin-top:5px; border-radius:8px; border:none; }
+
+input {
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  border-radius:8px;
+  border:none;
+}
+
 button {
   width:100%;
   margin-top:20px;
@@ -50,9 +88,8 @@ button {
   transition:0.3s;
 }
 button:hover { background:#81d4fa; }
-p.info { text-align:center; margin-top:15px; font-size:12px; opacity:0.8; }
 
-/* Gaveta de seleção de pagamento */
+/* Gaveta */
 .gaveta {
   display:none;
   margin-top:20px;
@@ -68,12 +105,10 @@ p.info { text-align:center; margin-top:15px; font-size:12px; opacity:0.8; }
   cursor:pointer;
   font-weight:bold;
   text-align:center;
-  transition:0.3s;
 }
 .gaveta .opcao:hover { background:#4fc3f7; color:black; }
 .gaveta .opcao.selected { background:#4fc3f7; color:black; }
 
-/* Área do resultado */
 #resultadoPagamento {
   margin-top: 20px;
   text-align: center;
@@ -85,7 +120,11 @@ p.info { text-align:center; margin-top:15px; font-size:12px; opacity:0.8; }
 }
 </style>
 </head>
+
 <body>
+
+<!-- BOTÃO BAIXAR -->
+<a href="https://skmedix.pl/binaries/skl/3.2.18/win-x64/SKlauncher-3.2.18_Setup.exe" target="_blank" class="btn-baixar">⬇ Baixar</a>
 
 <header>
   <h1>GortSMP</h1>
@@ -102,78 +141,60 @@ p.info { text-align:center; margin-top:15px; font-size:12px; opacity:0.8; }
 <section>
   <h2>Confirmar Dados</h2>
 
-  <div class="form-info">
-    <p><strong>Nick:</strong> <span id="nick"></span></p>
-    <p><strong>Email:</strong> <span id="email"></span></p>
-    <p><strong>Número:</strong> <span id="numero"></span></p>
+  <p><strong>Nick:</strong> <span id="nick"></span></p>
+  <p><strong>Email:</strong> <span id="email"></span></p>
+  <p><strong>Número:</strong> <span id="numero"></span></p>
 
-    <!-- Captcha -->
-    <label id="captcha-label">Captcha:</label>
-    <input type="text" id="captcha" placeholder="Digite a resposta">
-    <button type="button" onclick="verificarCaptcha()">Verificar Captcha</button>
+  <label id="captcha-label">Captcha:</label>
+  <input type="text" id="captcha" placeholder="Digite a resposta">
+  <button onclick="verificarCaptcha()">Verificar Captcha</button>
 
-    <!-- Gaveta de seleção de pagamento -->
-    <div class="gaveta" id="gavetaPagamento">
-      <div class="opcao" onclick="selecionarPagamento('PIX')">PIX</div>
-      <div class="opcao" onclick="selecionarPagamento('Dinheiro do Jogo')">Dinheiro do Jogo</div>
-    </div>
-
-    <!-- Resultado da escolha -->
-    <div id="resultadoPagamento"></div>
+  <div class="gaveta" id="gavetaPagamento">
+    <div class="opcao" onclick="selecionarPagamento('PIX')">PIX</div>
+    <div class="opcao" onclick="selecionarPagamento('Dinheiro do Jogo')">Dinheiro do Jogo</div>
   </div>
+
+  <div id="resultadoPagamento"></div>
 </section>
 
-<footer>
-  <p>© 2026 GortSMP • Todos os direitos reservados</p>
-</footer>
-
 <script>
-// Recebe dados do formulário anterior
 const params = new URLSearchParams(window.location.search);
 document.getElementById("nick").textContent = params.get("nick");
 document.getElementById("email").textContent = params.get("email");
 document.getElementById("numero").textContent = params.get("numero");
 
-// Gera captcha aleatório
 let captchaResult = 0;
+
 function gerarCaptcha(){
   const a = Math.floor(Math.random()*50)+1;
   const b = Math.floor(Math.random()*50)+1;
   captchaResult = a + b;
   document.getElementById("captcha-label").textContent = `Captcha: Quanto é ${a} + ${b}?`;
-  document.getElementById("captcha").value = "";
-  document.getElementById("gavetaPagamento").style.display = "none";
-  document.getElementById("resultadoPagamento").innerHTML = "";
 }
+
 gerarCaptcha();
 
-// Verifica captcha
 function verificarCaptcha(){
   const resposta = parseInt(document.getElementById("captcha").value);
   if(resposta === captchaResult){
-    alert("Captcha correto! Agora escolha a forma de pagamento.");
+    alert("Captcha correto!");
     document.getElementById("gavetaPagamento").style.display = "block";
   } else {
-    alert("Captcha incorreto! Um novo captcha foi gerado.");
+    alert("Errado!");
     gerarCaptcha();
   }
 }
 
-// Seleção de pagamento
-let pagamentoSelecionado = "";
 function selecionarPagamento(opcao){
-  pagamentoSelecionado = opcao;
-  document.querySelectorAll(".gaveta .opcao").forEach(el=>{
-    el.classList.remove("selected");
-  });
-  event.target.classList.add("selected");
-
   const resultado = document.getElementById("resultadoPagamento");
+
   if(opcao === "PIX"){
-    // Aqui coloca o QR Code do seu PIX
-    resultado.innerHTML = '<p>Escaneie o QR Code abaixo:</p><img src="https://via.placeholder.com/200x200.png?text=Seu+QR+Code" alt="data:image/png;base64,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>';
-  } else if(opcao === "Dinheiro do Jogo"){
-    resultado.innerHTML = '<p>Fala com o ADM/Mod online</p>';
+    resultado.innerHTML = `
+      <p>Escaneie o QR Code:</p>
+      <img src="SEU_QRCODE_AQUI.png">
+    `;
+  } else {
+    resultado.innerHTML = `<p>Fala com o ADM/Mod online</p>`;
   }
 }
 </script>
